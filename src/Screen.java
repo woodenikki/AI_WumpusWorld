@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 
 public class Screen extends JPanel implements KeyListener{
 	private static final long serialVersionUID = 1L;
-	public static final int tileSize = 128;
+	public static final int tileSize = 40;
 
 	public static final int SLEEP_TIME = 250;
 
