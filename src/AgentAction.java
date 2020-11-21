@@ -1,4 +1,4 @@
-
+//Wumpus
 public class AgentAction {
 	
 	public static final AgentAction moveLeft = new AgentAction(true);

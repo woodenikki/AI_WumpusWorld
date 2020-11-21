@@ -1,3 +1,4 @@
+//Wumpus
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;

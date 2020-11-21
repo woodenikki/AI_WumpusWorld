@@ -1,3 +1,4 @@
+//Wumpus
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -22,7 +23,8 @@ public class Screen extends JPanel implements KeyListener{
 	public static final int SLEEP_TIME = 250;
 
 	private GameTile [][] fullMap;
-	private GameTile [][] visableMap;
+	public GameTile [][] visableMap;
+	public String[][] mapString;
 
 	private int numActions; 
 	private boolean playerDeclaresVictory;
@@ -71,8 +73,64 @@ public class Screen extends JPanel implements KeyListener{
 		this.setMinimumSize(getSize());
 
 		setupInitialVariables();
+		mapToString(visableMap);
+		//printMap();
 
 	}
+	
+	public void mapToString(GameTile[][] map) {
+		 mapString = new String[map.length][map[0].length];
+		
+		for(int i = 0; i < map.length; i++) {
+			for(int j = 0; j < map[0].length; j++) {
+				if(map[i][j].isWall()) {
+					mapString[i][j] = "w";
+				}
+				if(map[i][j].isGround()) {
+					mapString[i][j] = " ";
+				}
+				if(map[i][j].hasBreeze()) {
+					mapString[i][j] = "~";
+				}
+				if(map[i][j].hasStench()) {
+					mapString[i][j] = "-";
+				}
+				if(map[i][j].hasStench()) {
+					mapString[i][j] = "-";
+				}
+				if(map[i][j].hasPit()) {
+					mapString[i][j] = "O";
+				}
+				if(map[i][j].hasWumpus()) {
+					mapString[i][j] = "X";
+				}
+				if(map[i][j].hasPlayer()) {
+					mapString[i][j] = "P";
+				}
+				if(map[i][j].hasGlitter()) {
+					mapString[i][j] = "G";
+				}
+				if((map[i][j].hasGlitter() && map[i][j].hasWumpus()) || 
+						(map[i][j].hasGlitter() && map[i][j].hasPit())) {
+					mapString[i][j] = "g";
+				}
+			}
+		}
+	}
+	
+	public GameTile[][] copyVisibleMap(){
+		GameTile[][] copy = new GameTile[visableMap.length][visableMap[0].length];
+		
+		for(int i = 0; i < visableMap.length; i++) {
+			for(int j = 0; j < visableMap[0].length; j++) {
+				copy[i][j] = visableMap[i][j];
+			}
+		}
+		
+		return copy;
+	}
+	
+	/*********DB Methods********/
 
 	//This method adds a pit to the map, and the associated breeze's
 	//Doesn't add a pit if it is on a wall
@@ -174,6 +232,7 @@ public class Screen extends JPanel implements KeyListener{
 			visableMap[rows-1][i] = new GameTile(GameTile.IS_WALL, true);
 		}
 
+		
 		//Add pits, and the breeze around them
 		int numPits = (int)(Math.random()*3+1); //1 through 3
 		for(int i = 0; i < numPits; i++) {
@@ -191,6 +250,9 @@ public class Screen extends JPanel implements KeyListener{
 				}
 			}
 		}
+		
+		
+		
 		//Add wumpus and stench
 		{
 			boolean found = false;
@@ -213,8 +275,9 @@ public class Screen extends JPanel implements KeyListener{
 				}
 			}
 		}
+		
 
-
+		
 		//Add Walls to inside of map
 		int numWalls = (int)(Math.random()*(rows-3)); //0 through rows-3
 		for(int i = 0; i < numWalls; i++) {
@@ -231,6 +294,7 @@ public class Screen extends JPanel implements KeyListener{
 				}
 			}
 		}
+		
 		//Add gold
 		{
 			boolean found = false;
@@ -254,26 +318,30 @@ public class Screen extends JPanel implements KeyListener{
 			}
 		}
 
-
+		//player start location
+		
 		makeThingsVisableAtThisLocation(fullMap.length-2,1);
-		playerX = fullMap.length-2;
-		playerY = 1;
-
+		//playerX = fullMap.length-2;
+		//playerY = 1;
+		
+		playerX = (int)(Math.random()*(fullMap.length-2))+1;
+		playerY = (int)(Math.random()*(fullMap.length-2))+1;
+		
 		//Cheater code
-		//playerX = (int)(Math.random()*(fullMap.length-2))+1;
-		//playerY = (int)(Math.random()*(fullMap.length-2))+1;
+
 		for(int i = 0; i < fullMap.length; i++) {
 			for(int j = 0; j < fullMap[i].length; j++) {
 				makeThingsVisableAtThisLocation(i,j);
 			}
 		}
+		
 
 		fullMap[playerX][playerY].setPlayer(true);
 
 		numActions = 0;
 		playerDeclaresVictory = false;
 
-		brain = new AgentBrain();
+		brain = new AgentBrain(this);
 
 	}
 

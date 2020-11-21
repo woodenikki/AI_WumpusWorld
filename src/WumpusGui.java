@@ -1,16 +1,16 @@
-import java.io.File;
+//Wumpus
 import java.io.IOException;
 
 import javax.swing.JFrame;
 
 
 
-public class DrBsGui extends JFrame{
+public class WumpusGui extends JFrame{
 	private static final long serialVersionUID = 1L;
 
-	private Screen screen;
+	private static Screen screen;
 
-	public DrBsGui() {
+	public WumpusGui() {
 		setTitle("Dr Bs Dungeon Crawler");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -26,14 +26,10 @@ public class DrBsGui extends JFrame{
 	
 	
 	public static void main(String [] args){
-		new DrBsGui();
+		new WumpusGui();
 		
-//		String[]vacuumWorld =
-//			{"wwww",
-//			 "wA w",
-//			 "wwww"};
-//		
-//		new MyGui("Vacuum World", vacuumWorld);
+		AgentBrain brain = new AgentBrain(screen);
+		brain.makeItOutAlive();
 	}
 
 

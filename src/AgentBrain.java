@@ -1,3 +1,4 @@
+//Wumpus
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -11,13 +12,18 @@ public class AgentBrain {
 	private static boolean keyboardPlayOnly = true;
 
 	private int currentNumMoves;
+	private Screen screen;
+	
+	private GameTile[][] theMap;
+	private String[][] theMapString;
 
-	public AgentBrain() {
+	public AgentBrain(Screen screen) {
 		nextMove = null;
 
 		numGamesPlayed++;
 
 		currentNumMoves = 0;
+		this.screen = screen;
 	}
 
 	public void setNextMove(AgentAction m) {
@@ -30,21 +36,6 @@ public class AgentBrain {
 	}
 	//For wumpus world, we do one move at a time
 	public AgentAction getNextMove(GameTile [][] visableMap) {
-		//Possible things to add to your moves
-//		nextMove = AgentAction.doNothing;
-//		nextMove = AgentAction.moveDown;
-//		nextMove = AgentAction.moveUp;
-//		nextMove = AgentAction.moveUp;
-//		nextMove = AgentAction.moveLeft;
-//		nextMove = AgentAction.pickupSomething;
-//		nextMove = AgentAction.declareVictory;
-//
-//		nextMove = AgentAction.shootArrowNorth;
-//		nextMove = AgentAction.shootArrowSouth;
-//		nextMove = AgentAction.shootArrowEast;
-//		nextMove = AgentAction.shootArrowWest;
-//		nextMove = AgentAction.quit;
-
 
 		//Ideally you would remove all this code, but I left it in so the keylistener would work
 		if(keyboardPlayOnly) {
@@ -75,8 +66,30 @@ public class AgentBrain {
 			}
 		}
 	}
-
-
+	
+	/******************MY METHODS*********************/
+	public void makeItOutAlive() {
+		//Dungeon does search, then brain
+		theMapString = new String[screen.mapString.length][screen.mapString[0].length];
+		
+		for(int i = 0; i < screen.mapString.length; i++) {
+			for(int j = 0; j < screen.mapString[0].length; j++) {
+				theMapString[i][j] = screen.mapString[i][j];
+			}
+		}
+		
+		printMap();
+	}
+	
+	public void printMap() {
+		System.out.println();
+		for(int i = 0; i < theMapString.length; i++) {
+			for(int j = 0; j < theMapString[0].length; j++) {
+				System.out.print(theMapString[i][j]);
+			}
+			System.out.println();
+		}
+	}
 
 
 }
