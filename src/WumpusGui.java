@@ -11,6 +11,7 @@ public class WumpusGui extends JFrame{
 	private static Screen screen;
 
 	public WumpusGui() {
+		
 		setTitle("Dr Bs Dungeon Crawler");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -27,9 +28,7 @@ public class WumpusGui extends JFrame{
 	
 	public static void main(String [] args){
 		new WumpusGui();
-		
-		AgentBrain brain = new AgentBrain(screen);
-		brain.makeItOutAlive();
+
 	}
 
 

@@ -5,20 +5,18 @@ public class State implements Comparable<State>{
 	private String [][] map;
 	private int Xcord;
 	private int Ycord;
-	private int columns;
 	private int dist;
 	private LinkedList<AgentAction> actionsToCurrentState;
 
 	//string array to state
-	public State(String [] theMap) {
-		map = new String[theMap.length][theMap[0].length()];
+	public State(String [][] theMap) {
+		map = new String[theMap.length][theMap[0].length];
+		
 		for(int i = 0; i < map.length; i++) {
-			char[] characters = theMap[i].toCharArray();
 			for(int j = 0; j<map[i].length; j++) {
-				map[i][j] = characters[j]+"";
+				map[i][j] = theMap[i][j];
 			}
 		}
-		columns = theMap[0].length();
 		map = takeOutPlayer(map);
 		actionsToCurrentState = new LinkedList<AgentAction>();
 		dist = this.getDistance();
@@ -49,7 +47,7 @@ public class State implements Comparable<State>{
 	//removes player from the state
 	public String [][] takeOutPlayer(String [][] map){
 		for(int i = 0; i < map.length; i++) {
-			for(int j = 0; j < columns; j ++) {
+			for(int j = 0; j < map[0].length; j ++) {
 				//System.out.print(map[i][j] + " ");
 				if (map [i][j].contentEquals("S")) {
 					Xcord = i;
@@ -71,20 +69,17 @@ public class State implements Comparable<State>{
 	public State moveStateRight() {
 		if (map[Xcord][Ycord+1].contentEquals("w"))
 			return null;
-
 		return new State(this, this.Xcord, this.Ycord+1, AgentAction.moveRight);
 	}
 	public State moveStateUp() {
 		if (map[Xcord-1][Ycord].contentEquals("w")) {
 			return null;
 		}
-
 		return new State(this, this.Xcord-1, this.Ycord, AgentAction.moveUp);
 	}
 	public State moveStateDown() {
 		if (map[Xcord+1][Ycord].contentEquals("w"))
 			return null;
-
 		return new State(this, this.Xcord+1, this.Ycord, AgentAction.moveDown);
 	}
 	public State pickUp() {
@@ -96,14 +91,11 @@ public class State implements Comparable<State>{
 		return null;
 	}
 
-	public boolean isComplete() {
-		for (int i = 0; i < map.length; i++) {
-			for (int j = 0; j < map[0].length; j++) {
-				if (map[i][j].contentEquals("."))
-					return false;
-			}
+	public boolean isHome() {
+		if(Xcord == map.length-2 && Ycord == 1) {
+			return true;
 		}
-		return true;
+		return false;
 
 	}
 
@@ -139,8 +131,15 @@ public class State implements Comparable<State>{
 		
 		return dist;
 	}
+	
+	public int getX() {
+		return Xcord;
+	}
+	
+	public int getY() {
+		return Ycord;
+	}
 
-	/********Compare*******/
 	@Override
 	public int compareTo(State other) {
 		if(this.map[this.Xcord][this.Ycord].contentEquals(".")) {

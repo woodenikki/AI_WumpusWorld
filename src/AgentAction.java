@@ -11,6 +11,7 @@ public class AgentAction {
 	public static final AgentAction shootArrowSouth = new AgentAction(true);
 	public static final AgentAction shootArrowEast = new AgentAction(true);
 	public static final AgentAction shootArrowWest = new AgentAction(true);
+	
 	public static final AgentAction declareVictory = new AgentAction(false);
 	public static final AgentAction quit = new AgentAction(false);
 	

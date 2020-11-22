@@ -20,10 +20,10 @@ public class Screen extends JPanel implements KeyListener{
 	private static final long serialVersionUID = 1L;
 	public static final int tileSize = 40;
 
-	public static final int SLEEP_TIME = 250;
+	public static final int SLEEP_TIME = 550;
 
 	private GameTile [][] fullMap;
-	public GameTile [][] visableMap;
+	public GameTile [][] visibleMap;
 	public String[][] mapString;
 
 	private int numActions; 
@@ -45,7 +45,7 @@ public class Screen extends JPanel implements KeyListener{
 		rows+=2; //Pad it with walls around the outside
 		cols+=2; //Pad it with walls around the outside
 		fullMap = new GameTile[rows][cols];
-		visableMap = new GameTile[rows][cols];
+		visibleMap = new GameTile[rows][cols];
 
 
 		System.out.println("Key Listener");
@@ -73,8 +73,9 @@ public class Screen extends JPanel implements KeyListener{
 		this.setMinimumSize(getSize());
 
 		setupInitialVariables();
-		mapToString(visableMap);
-		//printMap();
+		mapToString(visibleMap);
+		printMap();
+		System.out.println("________________");
 
 	}
 	
@@ -118,12 +119,22 @@ public class Screen extends JPanel implements KeyListener{
 		}
 	}
 	
+	public void printMap() {
+		System.out.println();
+		for(int i = 0; i < mapString.length; i++) {
+			for(int j = 0; j < mapString[0].length; j++) {
+				System.out.print(mapString[i][j]);
+			}
+			System.out.println();
+		}
+	}
+	
 	public GameTile[][] copyVisibleMap(){
-		GameTile[][] copy = new GameTile[visableMap.length][visableMap[0].length];
+		GameTile[][] copy = new GameTile[visibleMap.length][visibleMap[0].length];
 		
-		for(int i = 0; i < visableMap.length; i++) {
-			for(int j = 0; j < visableMap[0].length; j++) {
-				copy[i][j] = visableMap[i][j];
+		for(int i = 0; i < visibleMap.length; i++) {
+			for(int j = 0; j < visibleMap[0].length; j++) {
+				copy[i][j] = visibleMap[i][j];
 			}
 		}
 		
@@ -185,7 +196,7 @@ public class Screen extends JPanel implements KeyListener{
 		//playerImage = findRandomImage("images\\Dungeon Crawl Stone Soup Full\\player\\draconic_wing",playerImage);
 		return playerImage;
 	}
-	
+
 	private static void addBreeze(int x, int y, GameTile[][] map) {
 		if(x < map.length-1 && y < map[0].length-1 && x > 0 && y > 0) {
 			if(!map[x][y].isWall()) {
@@ -214,7 +225,7 @@ public class Screen extends JPanel implements KeyListener{
 		for(int i = 0; i < rows; i++) {
 			for(int j = 0; j<cols; j++) {
 				fullMap[i][j] = new GameTile(GameTile.IS_GROUND, false);
-				visableMap[i][j] = null;
+				visibleMap[i][j] = null;
 			}
 		}
 
@@ -222,17 +233,17 @@ public class Screen extends JPanel implements KeyListener{
 		for (int i = 0; i < rows; i++){
 			fullMap[i][0] = new GameTile(GameTile.IS_WALL, true);
 			fullMap[i][cols-1] =  new GameTile(GameTile.IS_WALL, true);
-			visableMap[i][0] = new GameTile(GameTile.IS_WALL, true);
-			visableMap[i][cols-1] = new GameTile(GameTile.IS_WALL, true);
+			visibleMap[i][0] = new GameTile(GameTile.IS_WALL, true);
+			visibleMap[i][cols-1] = new GameTile(GameTile.IS_WALL, true);
 		}
 		for (int i = 0; i < cols; i++){
 			fullMap[0][i] = new GameTile(GameTile.IS_WALL, true);
 			fullMap[rows-1][i] = new GameTile(GameTile.IS_WALL, true);
-			visableMap[0][i] = new GameTile(GameTile.IS_WALL, true);
-			visableMap[rows-1][i] = new GameTile(GameTile.IS_WALL, true);
+			visibleMap[0][i] = new GameTile(GameTile.IS_WALL, true);
+			visibleMap[rows-1][i] = new GameTile(GameTile.IS_WALL, true);
 		}
 
-		
+//TODO:
 		//Add pits, and the breeze around them
 		int numPits = (int)(Math.random()*3+1); //1 through 3
 		for(int i = 0; i < numPits; i++) {
@@ -276,7 +287,7 @@ public class Screen extends JPanel implements KeyListener{
 			}
 		}
 		
-
+//TODO:
 		
 		//Add Walls to inside of map
 		int numWalls = (int)(Math.random()*(rows-3)); //0 through rows-3
@@ -396,9 +407,9 @@ public class Screen extends JPanel implements KeyListener{
 
 	private void makeThingsVisableAtThisLocation(int x, int y){
 		//draw the gold
-		visableMap[x][y] = fullMap[x][y];
-		visableMap[x][y].setDiscovered(true);
-		//System.out.println("making visable: " + fullMap[x][y]);
+		visibleMap[x][y] = fullMap[x][y];
+		visibleMap[x][y].setDiscovered(true);
+		//System.out.println("making visible: " + fullMap[x][y]);
 	}
 
 	private boolean isValidMove(int newRow, int newCol) {
@@ -421,7 +432,7 @@ public class Screen extends JPanel implements KeyListener{
 	}
 
 	private void move() {
-		AgentAction action = brain.getNextMove(visableMap);
+		AgentAction action = brain.getNextMove(visibleMap);
 		if(action == null) {
 			return;
 		}
@@ -447,8 +458,8 @@ public class Screen extends JPanel implements KeyListener{
 			if(isValidMove(row,col+1)) {
 				fullMap[row][col].setPlayer(false);
 				fullMap[row][col+1].setPlayer(true);
-				visableMap[row][col] = fullMap[row][col];
-				visableMap[row][col+1] = fullMap[row][col+1];
+				visibleMap[row][col] = fullMap[row][col];
+				visibleMap[row][col+1] = fullMap[row][col+1];
 				playerY++;
 			}
 		}
@@ -457,8 +468,8 @@ public class Screen extends JPanel implements KeyListener{
 			if(isValidMove(row,col-1)) {
 				fullMap[row][col].setPlayer(false);
 				fullMap[row][col-1].setPlayer(true);
-				visableMap[row][col] = fullMap[row][col];
-				visableMap[row][col-1] = fullMap[row][col-1];
+				visibleMap[row][col] = fullMap[row][col];
+				visibleMap[row][col-1] = fullMap[row][col-1];
 				playerY--;
 			}
 		}
@@ -467,8 +478,8 @@ public class Screen extends JPanel implements KeyListener{
 			if(isValidMove(row-1,col)) {
 				fullMap[row][col].setPlayer(false);
 				fullMap[row-1][col].setPlayer(true);
-				visableMap[row][col] = fullMap[row][col];
-				visableMap[row-1][col] = fullMap[row-1][col];
+				visibleMap[row][col] = fullMap[row][col];
+				visibleMap[row-1][col] = fullMap[row-1][col];
 				playerX--;
 			}
 		}
@@ -477,8 +488,8 @@ public class Screen extends JPanel implements KeyListener{
 			if(isValidMove(row+1,col)) {
 				fullMap[row][col].setPlayer(false);
 				fullMap[row+1][col].setPlayer(true);
-				visableMap[row][col] = fullMap[row][col];
-				visableMap[row+1][col] = fullMap[row+1][col];
+				visibleMap[row][col] = fullMap[row][col];
+				visibleMap[row+1][col] = fullMap[row+1][col];
 				playerX++;
 			}
 		}
@@ -603,8 +614,8 @@ public class Screen extends JPanel implements KeyListener{
 		for(int i = 0; i < fullMap.length; i++) {
 			for(int j = 0; j < fullMap[i].length; j++) {
 				fullMap[i][j].setHeardScream(true);
-				if(visableMap[i][j] != null) {
-					visableMap[i][j].setHeardScream(true);
+				if(visibleMap[i][j] != null) {
+					visibleMap[i][j].setHeardScream(true);
 				}
 			}
 		}
