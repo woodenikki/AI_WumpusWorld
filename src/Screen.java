@@ -20,7 +20,7 @@ public class Screen extends JPanel implements KeyListener{
 	private static final long serialVersionUID = 1L;
 	public static final int tileSize = 40;
 
-	public static final int SLEEP_TIME = 550;
+	public static final int SLEEP_TIME = 250;
 
 	private GameTile [][] fullMap;
 	public GameTile [][] visibleMap;
@@ -117,6 +117,10 @@ public class Screen extends JPanel implements KeyListener{
 				}
 			}
 		}
+	}
+	
+	public void addPoints(int pta) {
+		points += pta;
 	}
 	
 	public void printMap() {
@@ -334,10 +338,13 @@ public class Screen extends JPanel implements KeyListener{
 		makeThingsVisableAtThisLocation(fullMap.length-2,1);
 		//playerX = fullMap.length-2;
 		//playerY = 1;
-		
-		playerX = (int)(Math.random()*(fullMap.length-2))+1;
-		playerY = (int)(Math.random()*(fullMap.length-2))+1;
-		
+		while(playerX != 1) {
+			playerX = (int)(Math.random()*(fullMap.length-2))+1;
+		}
+		while(playerY != 4) {
+			playerY = (int)(Math.random()*(fullMap.length-2))+1;
+		}
+
 		//Cheater code
 
 		for(int i = 0; i < fullMap.length; i++) {

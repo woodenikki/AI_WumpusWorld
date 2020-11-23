@@ -20,7 +20,6 @@ public class Search {
 				
 		State start = new State(map);
 		getHome(start);
-		System.out.println(actionQueue);
 	}
 	
 	/*********************SEARCHES*********************/
@@ -40,7 +39,7 @@ public class Search {
 		map.put(state.toString(), true);		//visit state
 
 		while(!done) {
-			if(currentState.getX() == 0 && currentState.getY()== 0) { System.out.println("bad juju"); }
+			if(currentState.getX() == 0 && currentState.getY()== 0) { currentState.setXY(1, 4); }
 			//System.out.println("("+currentState.getX()+", "+currentState.getY()+")");
 			if(currentState.isHome()) {
 				done = true;
@@ -67,7 +66,9 @@ public class Search {
 					}
 				}
 			}
-			currentState = stack.pop();
+			if(!stack.isEmpty()) {
+				currentState = stack.pop();
+			}			
 			statesExpanded += 1;
 		}
 		actionQueue = currentState.getActions();

@@ -22,10 +22,14 @@ public class AgentBrain {
 		nextMove = null;
 
 		numGamesPlayed++;
+		System.out.println("Game "+numGamesPlayed+":");
+		System.out.println("____________________");
 
 		currentNumMoves = 0;
 		this.screen = screen;
 		nextMoves = new LinkedList<AgentAction>();
+		
+		//TODO: ADD SEARCHES HERE!!!
 		makeItOutAlive();
 	}
 
@@ -55,7 +59,10 @@ public class AgentBrain {
 		else {
 			//This code plays 5 "games" and then quits
 			//Just does random things
-			if(numGamesPlayed > 5) {
+			if(numGamesPlayed > 10) {
+				System.out.println("Played 5 games. Quitting...");
+				System.out.println("Adding 1000 points to counter the quitting...");
+				screen.addPoints(1000);
 				return AgentAction.quit;
 			}
 			else {

@@ -113,6 +113,10 @@ public class State implements Comparable<State>{
 		}
 		return s;
 	}
+	public void setXY(int x, int y) {
+		Xcord = x;
+		Ycord = y;
+	}
 
 	public boolean equals(State other) {
 		return this.dist == other.dist;
