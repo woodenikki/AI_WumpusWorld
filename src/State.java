@@ -1,39 +1,37 @@
 //Wumpus
 import java.util.LinkedList;
 
-public class State implements Comparable<State>{
-	private String [][] map;
+public class State{
+	private GameTile [][] map;
 	private int Xcord;
 	private int Ycord;
 	private int dist;
 	private LinkedList<AgentAction> actionsToCurrentState;
 
 	//string array to state
-	public State(String [][] theMap) {
-		map = new String[theMap.length][theMap[0].length];
+	public State(GameTile [][] theMap) {
+		map = new GameTile[theMap.length][theMap[0].length];
 		
 		for(int i = 0; i < map.length; i++) {
 			for(int j = 0; j<map[i].length; j++) {
 				map[i][j] = theMap[i][j];
 			}
 		}
-		map = takeOutPlayer(map);
+		//map = takeOutPlayer(map);
 		actionsToCurrentState = new LinkedList<AgentAction>();
-		dist = this.getDistance();
 	}
 
 	//copy constructor
 	public State(State s) {
-		map = new String[s.map.length][s.map[0].length];
+		map = new GameTile[s.map.length][s.map[0].length];
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[i].length; j++) {
-				map[i][j] = new String(s.map[i][j]);
+				map[i][j] = new GameTile(s.map[i][j]);
 			}
 		}
 		Xcord = s.Xcord;
 		Ycord = s.Ycord;
 		actionsToCurrentState = new LinkedList<AgentAction>(s.actionsToCurrentState);
-		dist = this.getDistance();
 	}
 	//change x and y
 	public State(State s, int x, int y, AgentAction a) {
@@ -41,7 +39,6 @@ public class State implements Comparable<State>{
 		Xcord = x;
 		Ycord = y;
 		actionsToCurrentState.add(a);
-		dist = this.getDistance();
 	}
 
 	//removes player from the state
@@ -61,31 +58,35 @@ public class State implements Comparable<State>{
 
 	/*******************Action Methods*******************/
 	public State moveStateLeft() {
-		if (map[Xcord][Ycord-1].contentEquals("w")) {
+		if (map[Xcord][Ycord-1].hasPit() || map[Xcord][Ycord-1].hasWumpus() || map[Xcord][Ycord-1].isWall()) {
 			return null;	
 		}
 		return new State(this, this.Xcord, this.Ycord-1, AgentAction.moveLeft);
 	}
 	public State moveStateRight() {
-		if (map[Xcord][Ycord+1].contentEquals("w"))
+		if (map[Xcord][Ycord+1].hasPit() || map[Xcord][Ycord+1].hasWumpus() || map[Xcord][Ycord+1].isWall()) {
 			return null;
+		}
 		return new State(this, this.Xcord, this.Ycord+1, AgentAction.moveRight);
 	}
 	public State moveStateUp() {
-		if (map[Xcord-1][Ycord].contentEquals("w")) {
+		if (map[Xcord-1][Ycord].hasPit() || map[Xcord-1][Ycord].hasWumpus() || map[Xcord-1][Ycord].isWall()) {
 			return null;
 		}
 		return new State(this, this.Xcord-1, this.Ycord, AgentAction.moveUp);
 	}
 	public State moveStateDown() {
-		if (map[Xcord+1][Ycord].contentEquals("w"))
+		if (map[Xcord+1][Ycord].hasPit() || map[Xcord+1][Ycord].hasWumpus() || map[Xcord+1][Ycord].isWall()) {
 			return null;
+		}
 		return new State(this, this.Xcord+1, this.Ycord, AgentAction.moveDown);
 	}
 	public State pickUp() {
-		if (map[Xcord][Ycord].contentEquals(".")) {
+		if (map[Xcord][Ycord].hasGlitter()) {
 			State result = new State(this, this.Xcord, this.Ycord, AgentAction.pickupSomething);
-			result.map[Xcord][Ycord] = " ";
+			result.map[Xcord][Ycord].setGlitter(false);;
+			//pick up.. change your glitter value to be happy idk
+			
 			return result;
 		}
 		return null;
@@ -122,19 +123,6 @@ public class State implements Comparable<State>{
 		return this.dist == other.dist;
 		
 	}
-	public int getDistance() {
-		int dist = 0;
-		String[][] tmp = this.map;
-		for(int i=0; i < tmp.length; i++) {
-	        for(int j=0; j < tmp[i].length; j++) {
-	            if(tmp[i][j].contains(".")) {
-	            	 dist += 2;
-	            }
-	        }
-	    }
-		
-		return dist;
-	}
 	
 	public int getX() {
 		return Xcord;
@@ -142,21 +130,6 @@ public class State implements Comparable<State>{
 	
 	public int getY() {
 		return Ycord;
-	}
-
-	@Override
-	public int compareTo(State other) {
-		if(this.map[this.Xcord][this.Ycord].contentEquals(".")) {
-			return -1;
-		}else {
-			if(this.equals(other)) {
-			return 0;
-		}else if(this.dist < other.dist) {//<
-			return -2;
-		}else return 2;
-		}
-		
-		
 	}
 
 }

@@ -15,7 +15,7 @@ public class Search {
 		actionQueue = new LinkedList<AgentAction>();
 		
 	}
-	public static void search(String[][] map) {
+	public static void search(GameTile[][] map) {
 		actionQueue = new LinkedList<AgentAction>();
 				
 		State start = new State(map);

@@ -88,7 +88,7 @@ public class AgentBrain {
 
 		//printMap();
 		Search goHome = new Search();
-		goHome.search(mapSearchString);
+		goHome.search(theMap);
 		System.out.println(goHome.actionQueue);
 		for(int i = 0; i < goHome.actionQueue.size(); i++) {
 			nextMoves.add(goHome.actionQueue.get(i));
