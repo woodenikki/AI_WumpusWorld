@@ -20,13 +20,13 @@ public class Search {
 				
 		State start = new State(map);
 		getHome(start);
+		
 	}
 	
 	/*********************SEARCHES*********************/
 
 	public static void getHome(State state) {
-		int statesExpanded = 1;
-		int statesCreated = 1;
+
 		
 		State currentState = new State(state);
 		LinkedList<State> searchQueue = new LinkedList<State>();
@@ -45,13 +45,13 @@ public class Search {
 				done = true;
 				break;
 			}
-			State tryPickUp = currentState.pickUp();
-			if(tryPickUp != null) {
-				map.put(tryPickUp.toString(), true);
-				searchQueue.add(tryPickUp);
-				stack.push(tryPickUp);
-				statesCreated += 1;
-			} else {
+			//State tryPickUp = currentState.pickUp();
+			//if(tryPickUp != null) {
+				//map.put(tryPickUp.toString(), true);
+				//searchQueue.add(tryPickUp);
+				//stack.push(tryPickUp);
+				
+			//} else {
 				ArrayList<State> newState = lookDirections(currentState);
 				
 				for (State ns : newState) {
@@ -61,15 +61,16 @@ public class Search {
 							map.put(hash, true);
 							searchQueue.add(ns);
 							stack.push(ns);
-							statesCreated +=1;
+							
 						}
 					}
 				}
-			}
+			//}
 			if(!stack.isEmpty()) {
 				currentState = stack.pop();
-			}			
-			statesExpanded += 1;
+			}else {
+				break;
+			}
 		}
 		actionQueue = currentState.getActions();
 		actionQueue.add(AgentAction.declareVictory);
@@ -91,8 +92,7 @@ public class Search {
 	public static void printResults(int moves, int goldCollected, int statesExpanded, int statesCreated) {
 		System.out.println("Total Actions: "+ moves);
 		System.out.println("Gold Collected: "+ goldCollected);
-		System.out.println("Nodes Expanded: "+ statesExpanded);
-		System.out.println("Total Nodes: "+ statesCreated);
+
 	}
 
 

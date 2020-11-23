@@ -6,7 +6,7 @@ public class AgentBrain {
 
 	//Don't delete this variable
 	private AgentAction nextMove;
-	private Queue<AgentAction> nextMoves;
+	private LinkedList<AgentAction> nextMoves;
 
 	//We reload the brain each time, so this variable needs to be static
 	private static int numGamesPlayed = 0;
@@ -60,7 +60,7 @@ public class AgentBrain {
 			//This code plays 5 "games" and then quits
 			//Just does random things
 			if(numGamesPlayed > 10) {
-				System.out.println("Played 5 games. Quitting...");
+				System.out.println("Played "+numGamesPlayed+" games. Quitting...");
 				System.out.println("Adding 1000 points to counter the quitting...");
 				screen.addPoints(1000);
 				return AgentAction.quit;
@@ -70,7 +70,7 @@ public class AgentBrain {
 				if(currentNumMoves < 20) {
 					//AgentAction tmp = AgentAction.randomAction();
 					
-					AgentAction tmp =  nextMoves.poll();
+					AgentAction tmp =  nextMoves.removeFirst();
 					System.out.println(tmp);
 					return tmp;
 				}
@@ -85,6 +85,7 @@ public class AgentBrain {
 	public void makeItOutAlive() {
 		//Dungeon does search, then brain
 		seeAllOfMap();
+
 		//printMap();
 		Search goHome = new Search();
 		goHome.search(mapSearchString);
