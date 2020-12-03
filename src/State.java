@@ -17,6 +17,8 @@ public class State{
 				map[i][j] = theMap[i][j];
 			}
 		}
+		Xcord = map.length-2;
+		Ycord = 1;
 		//map = takeOutPlayer(map);
 		actionsToCurrentState = new LinkedList<AgentAction>();
 	}
@@ -81,16 +83,65 @@ public class State{
 		}
 		return new State(this, this.Xcord+1, this.Ycord, AgentAction.moveDown);
 	}
-	public State pickUp() {
-		if (map[Xcord][Ycord].hasGlitter()) {
-			State result = new State(this, this.Xcord, this.Ycord, AgentAction.pickupSomething);
-			result.map[Xcord][Ycord].setGlitter(false);;
-			//pick up.. change your glitter value to be happy idk
-			
-			return result;
+	
+	
+	
+	/*********SHOOTING********/
+	public State tryToShoot() {
+		for (int i = Xcord; !this.map[i][Ycord].isWall(); i--) { //from where I am to a wall..
+			if (this.map[i][Ycord].hasWumpus()) {
+				return new State(this, this.Xcord, this.Ycord, AgentAction.shootArrowNorth);
+			}
+		}
+		for (int i = Ycord; !this.map[Xcord][i].isWall(); i++) {
+			if (this.map[Xcord][i].hasWumpus()) {
+				return new State(this, this.Xcord, this.Ycord, AgentAction.shootArrowEast);
+			}
+		}
+		for (int i = Xcord; !this.map[i][Ycord].isWall(); i++) {
+			if (this.map[i][Ycord].hasWumpus()) {
+				return new State(this, this.Xcord, this.Ycord, AgentAction.shootArrowSouth);
+			}
+		}
+		for (int i = Ycord; !this.map[i][Ycord].isWall(); i--) { 
+			if (this.map[Xcord][i].hasWumpus()) {
+				return new State(this, this.Xcord, this.Ycord, AgentAction.shootArrowWest);
+			}
 		}
 		return null;
 	}
+	
+	public State pickUp() {
+
+		return new State(this, this.Xcord, this.Ycord, AgentAction.pickupSomething);
+	}
+	
+	/*
+	public State shootUp(int x, int y) {
+		return new State(this, this.Xcord, this.Ycord, AgentAction.shootArrowNorth);
+        
+	}
+	
+	public State shootRight(int x, int y) {
+		return new State(this, this.Xcord, this.Ycord, AgentAction.shootArrowEast);
+
+	}
+	
+	public State shootDown(int x, int y) {
+		return  new State(this, this.Xcord, this.Ycord, AgentAction.shootArrowSouth);
+
+	}
+	
+	public State shootLeft(int x, int y) {
+		System.out.println("Shot left.");
+		State result = new State(this, this.Xcord, this.Ycord, AgentAction.shootArrowWest);
+		for(int i = y+1; i < result.map.length; i++) {
+			result.map[x][i].setWumpus(false);
+		}
+		return result;
+		
+	}
+	*/
 
 	public boolean isHome() {
 		if(Xcord == map.length-2 && Ycord == 1) {
@@ -98,6 +149,16 @@ public class State{
 		}
 		return false;
 
+	}
+	
+	public boolean wumpusKilled() {
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map.length; j++) {
+				if (map[i][j].hasWumpus()) {return false;
+				}
+				}
+			}
+		return true;
 	}
 
 	public LinkedList<AgentAction> getActions() {

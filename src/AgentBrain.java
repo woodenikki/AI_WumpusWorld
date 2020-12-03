@@ -30,7 +30,10 @@ public class AgentBrain {
 		nextMoves = new LinkedList<AgentAction>();
 		
 		//TODO: ADD SEARCHES HERE!!!
-		makeItOutAlive();
+		seeAllOfMap();
+		
+		huntWumpus();
+		//makeItOutAlive();
 	}
 
 	public void setNextMove(AgentAction m) {
@@ -84,14 +87,25 @@ public class AgentBrain {
 	/******************MY METHODS*********************/
 	public void makeItOutAlive() {
 		//Dungeon does search, then brain
-		seeAllOfMap();
-
 		//printMap();
 		Search goHome = new Search();
-		goHome.search(theMap);
+		State start = new State(theMap);
+		goHome.search(theMap, start, 1);
+
 		System.out.println(goHome.actionQueue);
 		for(int i = 0; i < goHome.actionQueue.size(); i++) {
 			nextMoves.add(goHome.actionQueue.get(i));
+			
+		}
+	}
+	
+	public void huntWumpus() {
+		Search hunt = new Search();
+		State start = new State(theMap);
+		hunt.search(theMap, start, 2);
+		System.out.println(hunt.actionQueue);
+		for(int i = 0; i < hunt.actionQueue.size(); i++) {
+			nextMoves.add(hunt.actionQueue.get(i));
 			
 		}
 	}

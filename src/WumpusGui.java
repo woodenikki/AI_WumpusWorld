@@ -23,9 +23,6 @@ public class WumpusGui extends JFrame{
 		setVisible(true);
 	}
 
-
-	
-	
 	public static void main(String [] args){
 		new WumpusGui();
 

@@ -336,14 +336,15 @@ public class Screen extends JPanel implements KeyListener{
 		//player start location
 		
 		makeThingsVisableAtThisLocation(fullMap.length-2,1);
-		//playerX = fullMap.length-2;
-		//playerY = 1;
-		while(playerX != 1) {
+		playerX = fullMap.length-2;
+		playerY = 1;
+		
+		/*while(playerX != 1) {
 			playerX = (int)(Math.random()*(fullMap.length-2))+1;
 		}
 		while(playerY != 4) {
 			playerY = (int)(Math.random()*(fullMap.length-2))+1;
-		}
+		}*/
 
 		//Cheater code
 
