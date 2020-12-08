@@ -25,7 +25,6 @@ public class WumpusGui extends JFrame{
 
 	public static void main(String [] args){
 		new WumpusGui();
-
 	}
 
 

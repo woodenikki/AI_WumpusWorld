@@ -83,10 +83,9 @@ public class State{
 		}
 		return new State(this, this.Xcord+1, this.Ycord, AgentAction.moveDown);
 	}
+
+	/*********Honestly just do your best********/
 	
-	
-	
-	/*********SHOOTING********/
 	public State tryToShoot() {
 		for (int i = Xcord; !this.map[i][Ycord].isWall(); i--) { //from where I am to a wall..
 			if (this.map[i][Ycord].hasWumpus()) {
@@ -111,38 +110,15 @@ public class State{
 		return null;
 	}
 	
-	public State pickUp() {
-
-		return new State(this, this.Xcord, this.Ycord, AgentAction.pickupSomething);
-	}
-	
-	/*
-	public State shootUp(int x, int y) {
-		return new State(this, this.Xcord, this.Ycord, AgentAction.shootArrowNorth);
-        
-	}
-	
-	public State shootRight(int x, int y) {
-		return new State(this, this.Xcord, this.Ycord, AgentAction.shootArrowEast);
-
-	}
-	
-	public State shootDown(int x, int y) {
-		return  new State(this, this.Xcord, this.Ycord, AgentAction.shootArrowSouth);
-
-	}
-	
-	public State shootLeft(int x, int y) {
-		System.out.println("Shot left.");
-		State result = new State(this, this.Xcord, this.Ycord, AgentAction.shootArrowWest);
-		for(int i = y+1; i < result.map.length; i++) {
-			result.map[x][i].setWumpus(false);
+	public State tryPickup() {
+		if (this.map[Xcord][Ycord].hasGlitter()) {
+			State pickup = new State(this, this.Xcord, this.Ycord, AgentAction.pickupSomething);
+			pickup.map[Xcord][Ycord].setGlitter(false);
+			return pickup;
 		}
-		return result;
-		
+		return null;
 	}
-	*/
-
+	
 	public boolean isHome() {
 		if(Xcord == map.length-2 && Ycord == 1) {
 			return true;
@@ -155,6 +131,16 @@ public class State{
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map.length; j++) {
 				if (map[i][j].hasWumpus()) {return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	public boolean pickedUpGold() {
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map.length; j++) {
+				if (map[i][j].hasGlitter()) {return false;
 				}
 				}
 			}

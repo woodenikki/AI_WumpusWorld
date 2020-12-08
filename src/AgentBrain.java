@@ -28,12 +28,16 @@ public class AgentBrain {
 		currentNumMoves = 0;
 		this.screen = screen;
 		nextMoves = new LinkedList<AgentAction>();
-		
-		//TODO: ADD SEARCHES HERE!!!
 		seeAllOfMap();
-		
-		huntWumpus();
-		//makeItOutAlive();
+		//TODO: ADD SEARCHES HERE!!!
+		Search search = new Search();
+		State start = new State(theMap);
+		search.search(theMap, start, 3);
+		System.out.println(search.actionQueue);
+		for(int i = 0; i < search.actionQueue.size(); i++) {
+			nextMoves.add(search.actionQueue.get(i));
+			
+		}
 	}
 
 	public void setNextMove(AgentAction m) {
@@ -85,37 +89,13 @@ public class AgentBrain {
 	}
 	
 	/******************MY METHODS*********************/
-	public void makeItOutAlive() {
-		//Dungeon does search, then brain
-		//printMap();
-		Search goHome = new Search();
-		State start = new State(theMap);
-		goHome.search(theMap, start, 1);
-
-		System.out.println(goHome.actionQueue);
-		for(int i = 0; i < goHome.actionQueue.size(); i++) {
-			nextMoves.add(goHome.actionQueue.get(i));
-			
-		}
-	}
-	
-	public void huntWumpus() {
-		Search hunt = new Search();
-		State start = new State(theMap);
-		hunt.search(theMap, start, 2);
-		System.out.println(hunt.actionQueue);
-		for(int i = 0; i < hunt.actionQueue.size(); i++) {
-			nextMoves.add(hunt.actionQueue.get(i));
-			
-		}
-	}
 	
 	public void seeAllOfMap() {
 
 		mapToString(screen.visibleMap);
-		
+
 		theMap = new GameTile[screen.visibleMap.length][screen.visibleMap[0].length];
-		
+
 		for(int i = 0; i < screen.visibleMap.length; i++) {
 			for(int j = 0; j < screen.visibleMap[0].length; j++) {
 				theMap[i][j] = screen.visibleMap[i][j];
