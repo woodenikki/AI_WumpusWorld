@@ -49,7 +49,6 @@ public class Search {
 
 	public static void getHome(State state) {
 
-		
 		State currentState = new State(state);
 		LinkedList<State> searchQueue = new LinkedList<State>();
 		Stack<State> stack = new Stack<State>();
@@ -69,10 +68,10 @@ public class Search {
 			}
 
 	        ArrayList<State> newState = new ArrayList<State>();
-	        newState.add(currentState.moveStateRight());
-	        newState.add(currentState.moveStateDown());
 	        newState.add(currentState.moveStateLeft());
+	        newState.add(currentState.moveStateDown());
 	        newState.add(currentState.moveStateUp());
+	        newState.add(currentState.moveStateRight());
 
 				
 			for (State ns : newState) {
@@ -161,7 +160,7 @@ public class Search {
 		State currentState = new State(state);
 		LinkedList<State> searchQueue = new LinkedList<State>();
 		Stack<State> stack = new Stack<State>();
-		
+		Boolean usedArrow = false;
 		Boolean done = false;
 		HashMap<String, Boolean> map = new HashMap<String, Boolean>();
 
@@ -171,7 +170,7 @@ public class Search {
 			
 			if(currentState.getX() == 0 && currentState.getY()== 0) { currentState.setXY(1, 4); }
 			//System.out.println("("+currentState.getX()+", "+currentState.getY()+")");
-			
+			State tryToShoot = currentState.tryToShoot();
 			State tryPickup = currentState.tryPickup();
 			if(tryPickup != null) {
 				done = true;
@@ -180,21 +179,20 @@ public class Search {
 				searchQueue.add(tryPickup);
 				stack.push(tryPickup);
 			}
+			else if(tryToShoot != null && !usedArrow) {
+				usedArrow = true;
+	    	    String hash = tryToShoot.toString();
+	    	    map.put(hash, true);
+				searchQueue.add(tryToShoot);
+				stack.push(tryToShoot);
+			
+				
+			}
 			
 			else {
-				/*
-				State tryToShoot = currentState.tryToShoot();
-				if(tryToShoot != null) {
-	    	        String hash = tryToShoot.toString();
-	    	        map.put(hash, true);
-					searchQueue.add(tryToShoot);
-					stack.push(tryToShoot);
-				}
-				*/
-
 				ArrayList<State> newState = new ArrayList<State>();
-				newState.add(currentState.moveStateUp());
 				newState.add(currentState.moveStateRight());
+				newState.add(currentState.moveStateUp());
 				newState.add(currentState.moveStateDown());
 				newState.add(currentState.moveStateLeft());
 
