@@ -32,7 +32,7 @@ public class AgentBrain {
 		//TODO: ADD SEARCHES HERE!!!
 		Search search = new Search();
 		State start = new State(theMap);
-		search.search(theMap, start, 3);
+		search.search(theMap, start);
 		System.out.println(search.actionQueue);
 		for(int i = 0; i < search.actionQueue.size(); i++) {
 			nextMoves.add(search.actionQueue.get(i));
@@ -66,15 +66,15 @@ public class AgentBrain {
 		else {
 			//This code plays 5 "games" and then quits
 			//Just does random things
-			if(numGamesPlayed > 10) {
-				System.out.println("Played "+numGamesPlayed+" games. Quitting...");
-				System.out.println("Adding 1000 points to counter the quitting...");
+			if(numGamesPlayed > 20) {
+				System.out.println("Played "+(numGamesPlayed - 1)+" games. Quitting...");
+				//System.out.println("Adding 1000 points to counter the quitting...");
 				screen.addPoints(1000);
 				return AgentAction.quit;
 			}
 			else {
 				currentNumMoves++;
-				if(currentNumMoves < 20) {
+				if(currentNumMoves < 25) {
 					//AgentAction tmp = AgentAction.randomAction();
 					
 					AgentAction tmp =  nextMoves.removeFirst();
@@ -92,13 +92,13 @@ public class AgentBrain {
 	
 	public void seeAllOfMap() {
 
-		mapToString(screen.visibleMap);
+		mapToString(screen.fullMap);
 
-		theMap = new GameTile[screen.visibleMap.length][screen.visibleMap[0].length];
+		theMap = new GameTile[screen.fullMap.length][screen.fullMap[0].length];
 
-		for(int i = 0; i < screen.visibleMap.length; i++) {
-			for(int j = 0; j < screen.visibleMap[0].length; j++) {
-				theMap[i][j] = screen.visibleMap[i][j];
+		for(int i = 0; i < screen.fullMap.length; i++) {
+			for(int j = 0; j < screen.fullMap[0].length; j++) {
+				theMap[i][j] = screen.fullMap[i][j];
 			}
 		}
 

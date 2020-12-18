@@ -21,6 +21,7 @@ public class State{
 		Ycord = 1;
 		//map = takeOutPlayer(map);
 		actionsToCurrentState = new LinkedList<AgentAction>();
+		
 	}
 
 	//copy constructor
@@ -63,6 +64,7 @@ public class State{
 		if (map[Xcord][Ycord-1].hasPit() || map[Xcord][Ycord-1].hasWumpus() || map[Xcord][Ycord-1].isWall()) {
 			return null;	
 		}
+		
 		return new State(this, this.Xcord, this.Ycord-1, AgentAction.moveLeft);
 	}
 	public State moveStateRight() {
@@ -85,6 +87,33 @@ public class State{
 	}
 
 	/*********Honestly just do your best********/
+	
+	public State moveBack() {
+		if(this.actionsToCurrentState == null || this.actionsToCurrentState.getLast() == null) {
+			return new State(this, this.Xcord, this.Ycord, AgentAction.declareVictory);
+		}
+		
+		if (this.actionsToCurrentState.getLast() == AgentAction.moveUp) {				//up
+			return new State(this, this.Xcord, this.Ycord, AgentAction.moveDown);
+		}else if (this.actionsToCurrentState.getLast() == AgentAction.moveRight) {		//right
+			return new State(this, this.Xcord, this.Ycord, AgentAction.moveLeft);
+		}else if (this.actionsToCurrentState.getLast() == AgentAction.moveDown) {		//down
+			return new State(this, this.Xcord, this.Ycord, AgentAction.moveUp);
+		}else if (this.actionsToCurrentState.getLast() == AgentAction.moveLeft) {		//left
+			return new State(this, this.Xcord, this.Ycord, AgentAction.moveRight);
+		}
+		else return null;
+	}
+	
+	public boolean isSafeToMove(boolean wumpusDead) {
+		if(this.map[Xcord][Ycord].hasBreeze() ) {
+			return false;
+		}
+		if(!wumpusDead && this.map[Xcord][Ycord].hasStench()) {
+			return false;
+		}
+		return true;
+	}
 	
 	public State tryToShoot() {
 		for (int i = Xcord; !this.map[i][Ycord].isWall(); i--) { //from where I am to a wall..

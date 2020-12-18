@@ -16,7 +16,7 @@ public class Search {
 		actionQueue = new LinkedList<AgentAction>();
 		
 	}
-	public static void search(GameTile[][] map, State start, int s) {
+	public static void search(GameTile[][] map, State start) {
 		gtMap = new GameTile[map.length][map[0].length];
 		for(int i = 0; i < map.length; i++) {
 			for(int j = 0; j < map[0].length; j++) {
@@ -25,30 +25,13 @@ public class Search {
 		}
 		
 		actionQueue = new LinkedList<AgentAction>();
-				
+		itsDarkInHere(start);	
 		
-		//getHome(start);
-		
-		switch(s){
-		case 1:
-			getHome(start);
-			break;
-		case 2: 
-			huntTheWumpus(start);
-			break;
-		case 3:
-			findTheGoldAndHuntTheWumpus(start);
-			break;
-		default:
-			System.out.println("Bad search.");
-		}
 		
 	}
-	
-	/*********************SEARCHES*********************/
 
-	public static void getHome(State state) {
-
+	public static LinkedList<AgentAction> getHome(State state) {
+		
 		State currentState = new State(state);
 		LinkedList<State> searchQueue = new LinkedList<State>();
 		Stack<State> stack = new Stack<State>();
@@ -66,10 +49,17 @@ public class Search {
 				done = true;
 				break;
 			}
+			State tryPickup = currentState.tryPickup();
+			if(tryPickup != null) {
+    	        String hash = tryPickup.toString();
+    	        map.put(hash, true);
+				searchQueue.add(tryPickup);
+				stack.push(tryPickup);
+			}
 
 	        ArrayList<State> newState = new ArrayList<State>();
-	        newState.add(currentState.moveStateLeft());
 	        newState.add(currentState.moveStateDown());
+	        newState.add(currentState.moveStateLeft());
 	        newState.add(currentState.moveStateUp());
 	        newState.add(currentState.moveStateRight());
 
@@ -94,80 +84,23 @@ public class Search {
 		}
 		actionQueue = currentState.getActions();
 		actionQueue.add(AgentAction.declareVictory);
+		
+		return actionQueue;
 	}
-	
-	public static void huntTheWumpus(State state) {
-		State currentState = new State(state);
-		LinkedList<State> searchQueue = new LinkedList<State>();
-		Stack<State> stack = new Stack<State>();
-		
-		Boolean done = false;
-		HashMap<String, Boolean> map = new HashMap<String, Boolean>();
 
-		
-		map.put(state.toString(), true);		//visit state
-		
-		while(!done) {
-			
-			if(currentState.getX() == 0 && currentState.getY()== 0) { currentState.setXY(1, 4); }
-			//System.out.println("("+currentState.getX()+", "+currentState.getY()+")");
-			
-			State tryToShoot = currentState.tryToShoot();
-			if(tryToShoot != null) {
-				done = true;
-    	        String hash = tryToShoot.toString();
-    	        map.put(hash, true);
-				searchQueue.add(tryToShoot);
-				stack.push(tryToShoot);
-			}
-			else {
-				ArrayList<State> newState = new ArrayList<State>();
-				newState.add(currentState.moveStateUp());
-				newState.add(currentState.moveStateRight());
-				newState.add(currentState.moveStateDown());
-				newState.add(currentState.moveStateLeft());
-
-				for (State ns : newState) {
-					if (ns != null) {
-						String hash = ns.toString();
-						if (!map.containsKey(hash) ) {
-							map.put(hash, true);
-							searchQueue.add(ns);
-							stack.push(ns);
-
-						}
-					}
-				}
-			}
-
-			if(!stack.isEmpty()) {
-				currentState = stack.pop();
-			}else {
-				break;
-			}
-		}
-	
-		//System.out.println(actionQueue);
-		actionQueue = currentState.getActions();
-		Search goHome = new Search();
-		goHome.search(gtMap, currentState, 1);
-		
-		actionQueue.addAll(goHome.actionQueue);
-
-	}
-	
-	public static void findTheGoldAndHuntTheWumpus(State state) {
+	public static void itsDarkInHere(State state) {
 		State currentState = new State(state);
 		LinkedList<State> searchQueue = new LinkedList<State>();
 		Stack<State> stack = new Stack<State>();
 		Boolean usedArrow = false;
 		Boolean done = false;
 		HashMap<String, Boolean> map = new HashMap<String, Boolean>();
-
+		int steps = 0;
+		boolean killedwumpus = false;
 		map.put(state.toString(), true);		//visit state
 		
 		while(!done) {
-			
+			steps++;
 			if(currentState.getX() == 0 && currentState.getY()== 0) { currentState.setXY(1, 4); }
 			//System.out.println("("+currentState.getX()+", "+currentState.getY()+")");
 			State tryToShoot = currentState.tryToShoot();
@@ -179,17 +112,22 @@ public class Search {
 				searchQueue.add(tryPickup);
 				stack.push(tryPickup);
 			}
-			else if(tryToShoot != null && !usedArrow) {
+			else if(steps > 5 && tryToShoot != null && !usedArrow) {
 				usedArrow = true;
+				killedwumpus = true;
 	    	    String hash = tryToShoot.toString();
 	    	    map.put(hash, true);
 				searchQueue.add(tryToShoot);
 				stack.push(tryToShoot);
 			
 				
-			}
+			} 
 			
 			else {
+				if(!currentState.isSafeToMove(killedwumpus)) {
+					break;
+				}
+				
 				ArrayList<State> newState = new ArrayList<State>();
 				newState.add(currentState.moveStateRight());
 				newState.add(currentState.moveStateUp());
@@ -216,12 +154,10 @@ public class Search {
 			}
 		}
 	
-		//System.out.println(actionQueue);
 		actionQueue = currentState.getActions();
-		Search goHome = new Search();
-		goHome.search(gtMap, currentState, 1);
 		
-		actionQueue.addAll(goHome.actionQueue);
+			
+		actionQueue.addAll(getHome(currentState));
 
 	}
 

@@ -12,7 +12,7 @@ public class WumpusGui extends JFrame{
 
 	public WumpusGui() {
 		
-		setTitle("Dr Bs Dungeon Crawler");
+		setTitle("Nikki's Wumpus");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		screen = new Screen(4, 4);

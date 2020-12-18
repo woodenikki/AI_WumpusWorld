@@ -22,7 +22,7 @@ public class Screen extends JPanel implements KeyListener{
 
 	public static final int SLEEP_TIME = 250;
 
-	private GameTile [][] fullMap;
+	public GameTile [][] fullMap;
 	public GameTile [][] visibleMap;
 	public String[][] mapString;
 
@@ -73,7 +73,7 @@ public class Screen extends JPanel implements KeyListener{
 		this.setMinimumSize(getSize());
 
 		setupInitialVariables();
-		mapToString(visibleMap);
+		mapToString(fullMap);
 		printMap();
 		System.out.println("________________");
 
@@ -247,7 +247,6 @@ public class Screen extends JPanel implements KeyListener{
 			visibleMap[rows-1][i] = new GameTile(GameTile.IS_WALL, true);
 		}
 
-//TODO:
 		//Add pits, and the breeze around them
 		int numPits = (int)(Math.random()*3+1); //1 through 3
 		for(int i = 0; i < numPits; i++) {
@@ -291,7 +290,6 @@ public class Screen extends JPanel implements KeyListener{
 			}
 		}
 		
-//TODO:
 		
 		//Add Walls to inside of map
 		int numWalls = (int)(Math.random()*(rows-3)); //0 through rows-3
@@ -332,7 +330,7 @@ public class Screen extends JPanel implements KeyListener{
 				}
 			}
 		}
-
+//TODO:
 		//player start location
 		
 		makeThingsVisableAtThisLocation(fullMap.length-2,1);
@@ -348,12 +346,14 @@ public class Screen extends JPanel implements KeyListener{
 
 		//Cheater code
 
+		/*
 		for(int i = 0; i < fullMap.length; i++) {
 			for(int j = 0; j < fullMap[i].length; j++) {
 				makeThingsVisableAtThisLocation(i,j);
 			}
 		}
-		
+
+		*/
 
 		fullMap[playerX][playerY].setPlayer(true);
 
